@@ -190,7 +190,7 @@ def make_image(path: str, col=None, is_black=None) -> list[Image]:
         else:
             num = Image.open(new_path + f"-{i}.png")
 
-            num = num.convert("RGBA")
+        num = num.convert("RGBA")
 
         if hitcircle.size[0] > hitcircleoverlay.size[0]:
             overlay_x = int(hitcircle.size[0] / 2 - hitcircleoverlay.size[0] / 2)
