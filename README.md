@@ -8,6 +8,11 @@ This is a tool that allows you to edit your skins' hitcircle animation to instaf
 
 Click [here](https://github.com/clarks03/Osu-Instafade-Tool/releases) to download the latest release! Download the .exe and run it to get going!
 
+NOTE: you may receive some warnings when downloading. I received two when testing--the first was Google Chrome, and the second was Windows SmartProtect.
+
+I think the first is because no one else has downloaded this program (hopefully this will be resolved with more downloads)
+The second is because there's no author associated with the file (it was hard enough getting the .exe to work with PyInstaller; I don't care about it being an "unknown author".)
+
 ## Usage
 
 Users will be prompted with this window upon downloading.
