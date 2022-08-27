@@ -1,5 +1,7 @@
 # Osu-Instafade-Tool
 
+![](https://media.discordapp.net/attachments/599688004654596108/1012967712869322803/ezgif.com-gif-maker.gif)
+
 This is a tool that allows you to edit your skins' hitcircle animation to instafade.
 
 ## Installation
