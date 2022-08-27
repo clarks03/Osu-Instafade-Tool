@@ -17,15 +17,23 @@ The second is because there's no author associated with the file (it was hard en
 
 Users will be prompted with this window upon downloading.
 
-![](https://media.discordapp.net/attachments/599688004654596108/1012964589106888725/unknown.png)
+![](https://media.discordapp.net/attachments/599688004654596108/1013171474871369758/unknown.png)
 
 Press the "Browse" button to select a skin folder, and press submit once the skin has been selected.
 
 From there, you will be prompted by this screen:
 
-![](https://media.discordapp.net/attachments/599688004654596108/1012964977210044507/unknown.png)
+![](https://media.discordapp.net/attachments/599688004654596108/1013171536510844958/unknown.png)
 
 The skin will obviously look different depending on which skin you selected.
+
+NOTE: some skins have a black picture as their hitcircle, which will make the display a black square as seen below:
+
+![](https://media.discordapp.net/attachments/599688004654596108/1013171701053399040/unknown.png)
+
+To fix this, press the "Fix black display" button at the bottom. This removes the black hitcircle and replaces it with a transparent one, which is what the osu! client sees, anyways.
+
+![](https://media.discordapp.net/attachments/599688004654596108/1013171792573108245/unknown.png)
 
 ### Name
 
