@@ -35,7 +35,7 @@ def find_prefix(data: list, path: str) -> str:
     for line in data:
         if b'HitCirclePrefix' in line:
             prefix = line.decode('utf-8').strip()
-            prefix = prefix.removeprefix("HitCirclePrefix: ").strip()
+            prefix = prefix.removeprefix("HitCirclePrefix:").strip()
             return prefix
     if os.path.isfile(path + "/default-0.png") or os.path.isfile(path + "/default-0@2x.png"):
         return "default"
@@ -116,6 +116,7 @@ def get_hex(col: tuple) -> str:
 def colorize_image(img: Image, col: tuple) -> Image:
     """Colorize the image at <path> given <col>.
     """
+    img = img.convert("RGBA")
     overlay = Image.new(img.mode, img.size, col)
     color_flat = Image.blend(img, overlay, 1)
 
@@ -130,7 +131,7 @@ def make_image(path: str, col=None, is_black=None) -> list[Image]:
     hitcircleoverlay, and numbers on top of each other.
     """
     images = []
-    
+
     try:
         num_path = find_data(path)["HitCirclePrefix"]
     except AttributeError:
@@ -149,12 +150,15 @@ def make_image(path: str, col=None, is_black=None) -> list[Image]:
             if not all([hitcircleoverlay_hd, num_hd]):
                 hitcircle = hitcircle.resize((int(hitcircle.size[0] / 2), int(hitcircle.size[1] / 2)))
         else:
-            hitcircle = Image.open(path + "/hitcircle.png")
+            try:
+                hitcircle = Image.open(path + "/hitcircle.png")
+            except FileNotFoundError:
+                sg.popup("No hitcircle found in the skin.")
+                return []
 
         hitcircle = hitcircle.resize((int(hitcircle.size[0] * 1.25), int(hitcircle.size[1] * 1.25)))
-        
-        if is_black:
-            hitcircle = Image.new("RGBA", hitcircle.size, (0, 0, 0, 0))
+
+        hitcircle = hitcircle.convert("RGBA")
 
         if col:
             hitcircle = colorize_image(hitcircle, col)
@@ -165,11 +169,17 @@ def make_image(path: str, col=None, is_black=None) -> list[Image]:
                 hitcircleoverlay = hitcircleoverlay.resize(
                     (int(hitcircleoverlay.size[0] / 2), int(hitcircleoverlay.size[1] / 2)))
         else:
-            hitcircleoverlay = Image.open(path + "/hitcircleoverlay.png")
+            try:
+                hitcircleoverlay = Image.open(path + "/hitcircleoverlay.png")
+            except FileNotFoundError:
+                sg.popup("Hitcircleoverlay not found.")
+                return []
 
         hitcircleoverlay = hitcircleoverlay.resize((
                                                 int(hitcircleoverlay.size[0] * 1.25),
                                                 int(hitcircleoverlay.size[1] * 1.25)))
+
+        hitcircleoverlay = hitcircleoverlay.convert("RGBA")
 
         new_path = path + "/" + num_path.lower()
 
@@ -179,7 +189,9 @@ def make_image(path: str, col=None, is_black=None) -> list[Image]:
                 num = num.resize((int(num.size[0] / 2), int(num.size[1] / 2)))
         else:
             num = Image.open(new_path + f"-{i}.png")
-        
+
+            num = num.convert("RGBA")
+
         if hitcircle.size[0] > hitcircleoverlay.size[0]:
             overlay_x = int(hitcircle.size[0] / 2 - hitcircleoverlay.size[0] / 2)
             overlay_y = int(hitcircle.size[1] / 2 - hitcircleoverlay.size[1] / 2)
@@ -230,8 +242,8 @@ def generate_skin(path: str, hitcircle_hd: bool, hitcircleoverlay_hd: bool,
     (By delete, I mean make copies of all items as a 1x1 transparent image.)
 
     Next, I paste the new nums from <new_nums> to the nums directory, and
-    edit the skin.ini to change HitCircleOverlap. If all items are HD, we 
-    divide the size of the hitcircle by 2. If not, we take the size of the 
+    edit the skin.ini to change HitCircleOverlap. If all items are HD, we
+    divide the size of the hitcircle by 2. If not, we take the size of the
     hitcircle as our overlap.
     """
     # creating a new path
@@ -256,7 +268,7 @@ def generate_skin(path: str, hitcircle_hd: bool, hitcircleoverlay_hd: bool,
     if os.path.isfile(new_path + "hitcircle.png"):
         os.remove(new_path + "hitcircle.png")
 
-    # also deleting slider elements 
+    # also deleting slider elements
     if os.path.isfile(new_path + "sliderstartcircle@2x.png"):
         os.remove(new_path + "sliderstartcircle@2x.png")
     if os.path.isfile(new_path + "sliderstartcircle.png"):
@@ -267,7 +279,7 @@ def generate_skin(path: str, hitcircle_hd: bool, hitcircleoverlay_hd: bool,
     if os.path.isfile(new_path + "hitcircleoverlay.png"):
         os.remove(new_path + "hitcircleoverlay.png")
 
-    # also deleting slider elements 
+    # also deleting slider elements
     if os.path.isfile(new_path + "sliderstartcircleoverlay@2x.png"):
         os.remove(new_path + "sliderstartcircleoverlay@2x.png")
     if os.path.isfile(new_path + "sliderstartcircleoverlay.png"):
@@ -284,13 +296,13 @@ def generate_skin(path: str, hitcircle_hd: bool, hitcircleoverlay_hd: bool,
         if os.path.isfile(new_path + num_path + f"-{i}.png"):
             os.remove(new_path + num_path + f"-{i}.png")
 
-        # we paste the number in its place 
+        # we paste the number in its place
         if all([hitcircle_hd, hitcircleoverlay_hd, num_hd]):
             new_nums[i].save(new_path + num_path + f"-{i}@2x.png")
         else:
             new_nums[i].save(new_path + num_path + f"-{i}.png")
 
-    # finally, we need to edit the skin.ini file 
+    # finally, we need to edit the skin.ini file
 
     name = getfile_insensitive(path + "/skin.ini")[1]
 
@@ -306,7 +318,7 @@ def generate_skin(path: str, hitcircle_hd: bool, hitcircleoverlay_hd: bool,
             line_index = i
 
             # if line_index is -1, that means it wasn't found. we can append it
-    # after the fonts_index, which should always be found. 
+    # after the fonts_index, which should always be found.
 
     if line_index != -1:
         if all([hitcircle_hd, hitcircleoverlay_hd, num_hd]):
@@ -369,6 +381,7 @@ while True:
             # to use one of the existing combo colours as a hitcircle colour.
             # i'm gonna design something in paint.
             cols = find_data(values['-INPUT-'])['Combo Colours']
+            print(cols)
             skin_name = values['-INPUT-'][values['-INPUT-'].rfind('/') + 1:]
             new_layout = [
                 [sg.Image(size=(128, 128), key="-IMAGE-")],
@@ -376,12 +389,12 @@ while True:
                 [sg.Radio('Use default colour', 'RADIO1', key='-DEFAULT-', default=True)],
                 [sg.Radio('Use skin colour', 'RADIO1', key='-CUSTOM-')],
                 [sg.Listbox([f'Combo{i + 1}' for i in range(len(cols))], size=(10, len(cols)), key='-LISTBOX-')],
-                [sg.Button("Update"), sg.Button("Submit"), sg.Button("Fix black display")]
+                [sg.Button("Update"), sg.Button("Submit")]
             ]
 
             new_window = sg.Window("Customization", new_layout, finalize=True)
             listbox = new_window['-LISTBOX-'].Widget
-            
+
             # get list of hitcircles
             circle_lst = make_image(values['-INPUT-'])
 
@@ -393,7 +406,7 @@ while True:
             for i in range(len(cols)):
                 hex_col = get_hex(cols[i])
                 listbox.itemconfigure(i, bg=hex_col)
-            
+
             is_black = False
 
             while True:
@@ -432,13 +445,6 @@ while True:
                         sg.popup("Skin created successfully!")
                     except OSError:
                         sg.popup("That file already exists!")
-
-                if event2 == "Fix black display":
-                    is_black  = True
-                    circle_lst = make_image(values['-INPUT-'], is_black=is_black)
-                    image = ImageTk.PhotoImage(image=circle_lst[0])
-                    new_window['-IMAGE-'].update(data=image)
-                    new_window.refresh()
 
             new_window.close()
 
