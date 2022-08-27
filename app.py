@@ -36,7 +36,7 @@ def find_prefix(data: list, path: str) -> str:
         if b'HitCirclePrefix' in line:
             prefix = line.decode('utf-8').strip()
             prefix = prefix.removeprefix("HitCirclePrefix:").strip()
-            return prefix
+            return prefix.replace('\\', '/')
     if os.path.isfile(path + "/default-0.png") or os.path.isfile(path + "/default-0@2x.png"):
         return "default"
     raise AttributeError
