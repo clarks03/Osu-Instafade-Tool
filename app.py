@@ -125,21 +125,6 @@ def colorize_image(img: Image, col: tuple) -> Image:
     return transparent
 
 
-def remove_black_pixels(img: Image) -> None:
-    """Remove all black pixels from <img>.
-    """
-    datas = img.getdata()
-
-    new_data = []
-    for item in datas:
-        if item[0] == 0 and item[1] == 0 and item[2] == 0:
-            new_data.append((0, 0, 0, 0))
-        else:
-            new_data.append(item)
-
-    img.putdata(new_data)
-
-
 def make_image(path: str, col=None, is_black=None) -> list[Image]:
     """Make and return a list of image files of the hitcircle,
     hitcircleoverlay, and numbers on top of each other.
@@ -185,8 +170,6 @@ def make_image(path: str, col=None, is_black=None) -> list[Image]:
         hitcircleoverlay = hitcircleoverlay.resize((
                                                 int(hitcircleoverlay.size[0] * 1.25),
                                                 int(hitcircleoverlay.size[1] * 1.25)))
-
-        remove_black_pixels(hitcircleoverlay)
 
         new_path = path + "/" + num_path.lower()
 
