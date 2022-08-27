@@ -17,13 +17,13 @@ The second is because there's no author associated with the file (it was hard en
 
 Users will be prompted with this window upon downloading.
 
-![](https://media.discordapp.net/attachments/599688004654596108/1012964589106888725/unknown.png
+![](https://media.discordapp.net/attachments/599688004654596108/1012964589106888725/unknown.png)
 
 Press the "Browse" button to select a skin folder, and press submit once the skin has been selected.
 
 From there, you will be prompted by this screen:
 
-![](https://media.discordapp.net/attachments/599688004654596108/1012964977210044507/unknown.png
+![](https://media.discordapp.net/attachments/599688004654596108/1012964977210044507/unknown.png)
 
 The skin will obviously look different depending on which skin you selected.
 
