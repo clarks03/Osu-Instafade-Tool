@@ -412,6 +412,11 @@ while True:
                             new_window.refresh()
                         else:
                             sg.popup("No colour selected.")
+                    else:
+                        circle_lst = make_image(values['-INPUT-'])
+                        image = ImageTk.PhotoImage(image=circle_lst[0])
+                        new_window['-IMAGE-'].update(data=image)
+                        new_window.refresh()
 
                 if event2 == "Submit":
                     col = cols[int(values2['-LISTBOX-'][0][5]) - 1] if values2['-CUSTOM-'] else None
