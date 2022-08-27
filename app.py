@@ -140,7 +140,7 @@ def remove_black_pixels(img: Image) -> None:
     img.putdata(new_data)
 
 
-def make_image(path: str, col=None) -> list[Image]:
+def make_image(path: str, col=None, is_black=None) -> list[Image]:
     """Make and return a list of image files of the hitcircle,
     hitcircleoverlay, and numbers on top of each other.
     """
@@ -168,7 +168,8 @@ def make_image(path: str, col=None) -> list[Image]:
 
         hitcircle = hitcircle.resize((int(hitcircle.size[0] * 1.25), int(hitcircle.size[1] * 1.25)))
         
-        remove_black_pixels(hitcircle)
+        if is_black:
+            hitcircle = Image.new("RGBA", hitcircle.size, (0, 0, 0, 0))
 
         if col:
             hitcircle = colorize_image(hitcircle, col)
@@ -392,7 +393,7 @@ while True:
                 [sg.Radio('Use default colour', 'RADIO1', key='-DEFAULT-', default=True)],
                 [sg.Radio('Use skin colour', 'RADIO1', key='-CUSTOM-')],
                 [sg.Listbox([f'Combo{i + 1}' for i in range(len(cols))], size=(10, len(cols)), key='-LISTBOX-')],
-                [sg.Button("Update"), sg.Button("Submit")]
+                [sg.Button("Update"), sg.Button("Submit"), sg.Button("Fix black display")]
             ]
 
             new_window = sg.Window("Customization", new_layout, finalize=True)
@@ -409,6 +410,8 @@ while True:
             for i in range(len(cols)):
                 hex_col = get_hex(cols[i])
                 listbox.itemconfigure(i, bg=hex_col)
+            
+            is_black = False
 
             while True:
                 event2, values2 = new_window.read()
@@ -446,6 +449,13 @@ while True:
                         sg.popup("Skin created successfully!")
                     except OSError:
                         sg.popup("That file already exists!")
+
+                if event2 == "Fix black display":
+                    is_black  = True
+                    circle_lst = make_image(values['-INPUT-'], is_black=is_black)
+                    image = ImageTk.PhotoImage(image=circle_lst[0])
+                    new_window['-IMAGE-'].update(data=image)
+                    new_window.refresh()
 
             new_window.close()
 
