@@ -27,14 +27,6 @@ From there, you will be prompted by this screen:
 
 The skin will obviously look different depending on which skin you selected.
 
-NOTE: some skins have a black picture as their hitcircle, which will make the display a black square as seen below:
-
-![](https://media.discordapp.net/attachments/599688004654596108/1013171701053399040/unknown.png)
-
-To fix this, press the "Fix black display" button at the bottom. This removes the black hitcircle and replaces it with a transparent one, which is what the osu! client sees, anyways.
-
-![](https://media.discordapp.net/attachments/599688004654596108/1013171792573108245/unknown.png)
-
 ### Name
 
 This should be self-explanatory; this is the name of the skin. NOTE: if you choose the same name as another skin in your skins folder, it will not work.
@@ -46,6 +38,15 @@ You are provided with two options for colours--default or skin colour. Default c
 If you choose the skin colour option, make sure you press one of the given combo colours from the drop-down menu, AND MAKE SURE TO PRESS UPDATE SO YOU CAN SEE THE CHANGES!! OTHERWISE IT WILL NOT WORK!!
 
 Once you have configured your skin accordingly, press submit to generate the skin.
+
+NOTE: some skins have a black picture as their hitcircle, which will make the display a black square as seen below:
+
+![](https://media.discordapp.net/attachments/599688004654596108/1013171701053399040/unknown.png)
+
+To fix this, press the "Fix black display" button at the bottom. This removes the black hitcircle and replaces it with a transparent one, which is what the osu! client sees, anyways.
+
+![](https://media.discordapp.net/attachments/599688004654596108/1013171792573108245/unknown.png)
+
 
 ## Help
 
