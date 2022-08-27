@@ -29,7 +29,7 @@ def isfile_insensitive(path):
     return getfile_insensitive(path) is not None
 
 
-def find_prefix(data: list) -> str:
+def find_prefix(data: list, path: str) -> str:
     """Helper function of <find_data>. Returns the hitcircleprefix, if any.
     """
     for line in data:
@@ -37,6 +37,9 @@ def find_prefix(data: list) -> str:
             prefix = line.decode('utf-8').strip()
             prefix = prefix.removeprefix("HitCirclePrefix: ").strip()
             return prefix
+    if os.path.isfile(path + "/default-0.png") or os.path.isfile(path + "/default-0@2x.png"):
+        return "default"
+    raise AttributeError
 
 
 def find_if_above(data: list) -> bool:
@@ -95,7 +98,10 @@ def find_data(path: str) -> dict:
     with open(f'{path}/{name}', "rb") as file:
         d = {}
         data = file.read().split(b'\n')
-        d['HitCirclePrefix'] = find_prefix(data)
+        try:
+            d['HitCirclePrefix'] = find_prefix(data, path)
+        except AttributeError:
+            raise AttributeError
         d['HitCircleOverlayAboveNumber'] = find_if_above(data)
         d['Combo Colours'] = find_colours(data)
         return d
@@ -124,8 +130,13 @@ def make_image(path: str, col=None) -> list[Image]:
     hitcircleoverlay, and numbers on top of each other.
     """
     images = []
+    
+    try:
+        num_path = find_data(path)["HitCirclePrefix"]
+    except AttributeError:
+        sg.popup("Skin does not have numbers.")
+        return
 
-    num_path = find_data(path)["HitCirclePrefix"]
     print(num_path)
 
     hitcircle_hd = os.path.isfile(path + "/hitcircle@2x.png")
@@ -153,8 +164,9 @@ def make_image(path: str, col=None) -> list[Image]:
         else:
             hitcircleoverlay = Image.open(path + "/hitcircleoverlay.png")
 
-        hitcircleoverlay = hitcircleoverlay.resize((int(hitcircleoverlay.size[0] * 1.25),
-                                                    int(hitcircleoverlay.size[1] * 1.25)))
+        hitcircleoverlay = hitcircleoverlay.resize((
+                                                int(hitcircleoverlay.size[0] * 1.25),
+                                                int(hitcircleoverlay.size[1] * 1.25)))
 
         new_path = path + "/" + num_path.lower()
 
@@ -164,8 +176,25 @@ def make_image(path: str, col=None) -> list[Image]:
                 num = num.resize((int(num.size[0] / 2), int(num.size[1] / 2)))
         else:
             num = Image.open(new_path + f"-{i}.png")
+        
+        if hitcircle.size[0] > hitcircleoverlay.size[0]:
+            overlay_x = int(hitcircle.size[0] / 2 - hitcircleoverlay.size[0] / 2)
+            overlay_y = int(hitcircle.size[1] / 2 - hitcircleoverlay.size[1] / 2)
 
-        hitcircle.paste(hitcircleoverlay, (0, 0), hitcircleoverlay)
+            hitcircle.paste(hitcircleoverlay, (overlay_x, overlay_y), hitcircleoverlay)
+        elif hitcircle.size[0] < hitcircleoverlay.size[0]:
+            new_img = Image.new(hitcircle.mode, hitcircleoverlay.size, (0, 0, 0, 0))
+
+            hitcircle_x = int(hitcircleoverlay.size[0] / 2 - hitcircle.size[0] / 2)
+            hitcircle_y = int(hitcircleoverlay.size[1] / 2 - hitcircle.size[1] / 2)
+
+            new_img.paste(hitcircle, (hitcircle_x, hitcircle_y), hitcircle)
+
+            hitcircle = new_img
+
+            hitcircle.paste(hitcircleoverlay, (0, 0), hitcircleoverlay)
+        else:
+            hitcircle.paste(hitcircleoverlay, (0, 0), hitcircleoverlay)
 
         num_x = int(hitcircle.size[0] / 2 - num.size[0] / 2)
         num_y = int(hitcircle.size[1] / 2 - num.size[1] / 2)
