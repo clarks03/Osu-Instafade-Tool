@@ -39,6 +39,20 @@ If you choose the skin colour option, make sure you press one of the given combo
 
 Once you have configured your skin accordingly, press submit to generate the skin.
 
+### Running from source
+
+Prerequisites:
+* Python 3.9+
+
+Install dependencies:
+```
+python -m pip install -r requirements.txt
+```
+
+Run app:
+```
+python app.py
+```
 
 ## Help
 
